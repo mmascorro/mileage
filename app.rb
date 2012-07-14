@@ -2,7 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 
-db = SQLite3::Database.new( "/home/miguel/www/mileage/mileage.db" )
+db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
 
 get '/' do
