@@ -14,7 +14,7 @@
 			
 			trs[i].addEventListener("click", function(e){
 				
-				window.location = "/leg/" + e.currentTarget.dataset['id'];
+				window.location = "../leg/" + e.currentTarget.dataset['id'];
 	
 			})
 		}
@@ -28,10 +28,10 @@
 <div class="container-fluid">
 <ul class="breadcrumb">
     <li>
-    <a href="/">Home</a> <span class="divider">/</span>
+    <a href="<%=uri('/')%>">Home</a> <span class="divider">/</span>
     </li>
     <li  class="active">
-    <a href="/trip/<%= @trip['id'] %>">Trip</a> <span class="divider">/</span>
+    <a href="<%= uri("/trip/#{@trip['id']}") %>">Trip</a> <span class="divider">/</span>
     </li>
 </ul>
 
@@ -68,7 +68,7 @@
 
 	<h2>Add Leg</h2>
 
-	<form action="leg" method="post" class="hidden">
+	<form action="<%=uri('/leg')%>" method="post" class="hidden">
 
 	<label for="start_dt">Timestamp</label>
 	<input type="datetime" name="start_dt" id="start_dt" />

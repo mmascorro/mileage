@@ -28,12 +28,12 @@
 <div class="container-fluid">
 <ul class="breadcrumb">
     <li class="active">
-    <a href="/">Home</a> <span class="divider">/</span>
+    <a href="<%=uri('/')%>">Home</a> <span class="divider">/</span>
     </li>
 </ul>
 
 	<button id="showForm" class="btn btn-inverse">Add</button>
-	<form action="trip" method="post" class="hidden">
+	<form action="<%= to('/trip') %>" method="post" class="hidden">
 
 	<input type="text" name="name" />
 
@@ -43,7 +43,7 @@
 	<ul class="nav nav-tabs nav-stacked">
 	<%	@rows.each do |r| %>
 		<li>
-			<h3><a href="trip/<%= r['id']%>"><%= r['name'] %></a></h3>
+			<h3><a href="<%= to("/trip/#{r['id']}") %>"><%= r['name'] %></a></h3>
 		</li>
 	<% end %>
 

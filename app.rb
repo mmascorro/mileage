@@ -44,7 +44,7 @@ post '/leg' do
 		params[:id]
 		)
 	
-		redirect to("/trip/#{params[:trip_id]}")
+		redirect to("trip/#{params[:trip_id]}")
 	else
 		db.execute("INSERT INTO legs (trip_id, start_dt,start_odometer,end_dt,end_odometer) VALUES (?,?,?,?,?)", 
 		params[:trip_id], 
@@ -52,7 +52,7 @@ post '/leg' do
 		params[:end_dt], params[:end_odometer]
 		)
 	
-		redirect to("/trip/#{params[:trip_id]}")
+		redirect to("trip/#{params[:trip_id]}")
 
 	end
 

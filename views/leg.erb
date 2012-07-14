@@ -26,10 +26,10 @@
 <div class="container-fluid">
 	<ul class="breadcrumb">
 	    <li>
-	    <a href="/">Home</a> <span class="divider">/</span>
+	    <a href="<%=uri('/')%>">Home</a> <span class="divider">/</span>
 	    </li>
 	    <li>
-	    <a href="/trip/<%= @leg['trip_id'] %>">Trip</a> <span class="divider">/</span>
+	    <a href="<%= uri("/trip/#{@leg['trip_id']}") %>">Trip</a> <span class="divider">/</span>
 	    </li>
 	   	<li class="active">
 	    <a href="#">Leg</a> <span class="divider">/</span>
@@ -38,7 +38,7 @@
 
 	<h1>Leg</h1>
 
-	<form action="leg" method="post">
+	<form action="<%=uri('/leg')%>" method="post">
 
 
 	<label for="start_dt">Start Time</label>
