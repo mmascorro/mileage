@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+	<title>Trip</title>
+	<meta name = "viewport" content = "width = device-width">
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+	<script type="text/javascript">
+	window.onload = function(){
+
+		document.getElementById("start_dt").value = new Date().toISOString();
+
+		trs = document.querySelectorAll("tbody tr");
+		for(i=0; i<trs.length;i++){
+			
+			trs[i].addEventListener("click", function(e){
+				
+				window.location = "/leg/" + e.currentTarget.dataset['id'];
+	
+			})
+		}
+	}
+
+	</script>
+
+</head>
+
+<body>
+<div class="container-fluid">
+<ul class="breadcrumb">
+    <li>
+    <a href="/">Home</a> <span class="divider">/</span>
+    </li>
+    <li  class="active">
+    <a href="/trip/<%= @trip['id'] %>">Trip</a> <span class="divider">/</span>
+    </li>
+</ul>
+
+	<h1><%= @trip['name'] %></h1>
+
+
+
+
+
+	<% if @legs.length > 0 %>
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>Start Time</th>
+				<th>Start Miles</th>
+				<th>End Time</th>
+				<th>End Miles</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%	@legs.each do |l| %>
+			<tr data-id="<%= l['id']%>">
+				<td><%= l['start_dt']%></td>
+				<td><%= l['start_odometer'] %></td>
+				<td><%= l['end_dt']%></td>
+				<td><%= l['end_odometer'] %></td>
+				<td><%= l['miles'] %></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<% end %>
+
+	<h2>Add Leg</h2>
+
+	<form action="/leg" method="post" class="hidden">
+
+	<label for="start_dt">Timestamp</label>
+	<input type="datetime" name="start_dt" id="start_dt" />
+
+	<label for="start_odometer">Miles</label>
+	<input type="number" name="start_odometer" id="start_odometer"/>
+
+	<input type="hidden" name="trip_id" id="trip_id" value="<%= @trip['id'] %>"/>
+	<div>
+		<button type="submit" class="btn btn-primary">New Leg</button>
+	</div>
+	</form>
+
+</div>
+</body>
+</html>

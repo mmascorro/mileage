@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+	<title>Trip Leg</title>
+	<meta name = "viewport" content = "width = device-width,initial-scale=1, maximum-scale=1">
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+
+	<script type="text/javascript">
+	window.onload = function(){
+
+		end_cur.addEventListener("click", function(e){
+
+
+			document.getElementById("end_dt").value = new Date().toISOString();
+
+			e.preventDefault();
+		})
+
+		
+	}
+
+	</script>
+
+</head>
+<body>
+<div class="container-fluid">
+	<ul class="breadcrumb">
+	    <li>
+	    <a href="/">Home</a> <span class="divider">/</span>
+	    </li>
+	    <li>
+	    <a href="/trip/<%= @leg['trip_id'] %>">Trip</a> <span class="divider">/</span>
+	    </li>
+	   	<li class="active">
+	    <a href="#">Leg</a> <span class="divider">/</span>
+	    </li>
+	</ul>
+
+	<h1>Leg</h1>
+
+	<form action="/leg" method="post">
+
+
+	<label for="start_dt">Start Time</label>
+	<input type="datetime" name="start_dt" id="start_dt" value="<%= @leg['start_dt'] %>" />
+
+	<label for="start_odometer">Start Miles</label>
+	<input type="number" name="start_odometer" id="start_odometer" value="<%= @leg['start_odometer'] %>"/>
+
+	<label for="end_dt">End Time</label>
+	<input type="datetime" name="end_dt" id="end_dt" value="<%= @leg['end_dt'] %>"/> <button id="end_cur" class="btn">Now</button>
+
+	<label for="end_odometer">End Miles</label>
+	<input type="number" name="end_odometer" id="end_odometer" value="<%= @leg['end_odometer'] %>"/>
+
+
+	<input type="hidden" name="id" id="id" value="<%= @leg['id'] %>"/>
+	<input type="hidden" name="trip_id" id="trip_id" value="<%= @leg['trip_id'] %>" />
+	<div>
+		<button type="submit" class="btn btn-primary">Save</button>
+	</div>
+
+	</form>
+
+</div>
+</body>
+</html>

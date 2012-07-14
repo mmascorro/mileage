@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<title>Mileage Tracker</title>
+<meta name = "viewport" content = "width = device-width">
+
+	<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+	<style type="text/css">
+	.hidden { display: none;}
+	</style>
+	<script type="text/javascript">
+	window.onload = function(){
+
+
+
+		document.getElementById("showForm").addEventListener("click", function(e){
+
+			document.getElementsByTagName("form")[0].className = "";
+			e.target.className = "hidden";
+		})
+	}
+
+	</script>
+</head>
+<body>
+
+
+<div class="container-fluid">
+<ul class="breadcrumb">
+    <li class="active">
+    <a href="/">Home</a> <span class="divider">/</span>
+    </li>
+</ul>
+
+	<button id="showForm" class="btn btn-inverse">Add</button>
+	<form action="/trip" method="post" class="hidden">
+
+	<input type="text" name="name" />
+
+	<input type="submit" value="Send" />
+	</form>
+
+	<ul class="nav nav-tabs nav-stacked">
+	<%	@rows.each do |r| %>
+		<li>
+			<h3><a href="trip/<%= r['id']%>"><%= r['name'] %></a></h3>
+		</li>
+	<% end %>
+
+	</ul>
+
+</div>
+</body>
+</html>
+
