@@ -12,6 +12,7 @@ db.results_as_hash = true
 APP_KEY = 'jbmgaznc7uukml7'
 APP_SECRET = 'oekmkvl3utz4occ'
 ACCESS_TYPE = :app_folder
+
 session = DropboxSession.new(APP_KEY, APP_SECRET)
 dpClient = nil
 
@@ -89,7 +90,7 @@ end
 get '/dp/:type' do
 
 	session.get_request_token
-	authorize_url = session.get_authorize_url("http://192.168.56.10:4567/dpa/#{params[:type]}")
+	authorize_url = session.get_authorize_url(uri("/dpa/#{params[:type]}"))
 	# "<a href=\"#{authorize_url}\">#{authorize_url}</a>"
 	redirect to(authorize_url)
 
@@ -101,7 +102,7 @@ get '/dpa/:type' do
 	#params[:uid], params[:oauth_token]
 	session.get_access_token
 	dpClient = DropboxClient.new(session, ACCESS_TYPE)
-	redirect to("/dp_#{params[:type]}")
+	redirect to(uri("/dp_#{params[:type]}"))
 
 end
 
