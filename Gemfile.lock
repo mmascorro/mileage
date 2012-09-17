@@ -2,7 +2,10 @@ GEM
   remote: http://rubygems.org/
   specs:
     backports (2.6.1)
+    dropbox-sdk (1.5.1)
+      json
     eventmachine (0.12.10)
+    json (1.7.5)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -26,6 +29,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dropbox-sdk
   sinatra
   sinatra-contrib
   sqlite3

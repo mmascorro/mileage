@@ -2,8 +2,18 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 
+require 'dropbox_sdk'
+
+
+
 db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
+
+APP_KEY = 'jbmgaznc7uukml7'
+APP_SECRET = 'oekmkvl3utz4occ'
+ACCESS_TYPE = :app_folder
+session = DropboxSession.new(APP_KEY, APP_SECRET)
+dpClient = nil
 
 get '/' do
 	@rows = db.execute( "SELECT * FROM trips ORDER BY id desc" )
@@ -68,4 +78,50 @@ get '/leg/:id' do
 	
 	erb :leg
 	
+end
+
+get '/config' do
+	erb :config
+end
+
+
+#init the dropbox api
+get '/dp/:type' do
+
+	session.get_request_token
+	authorize_url = session.get_authorize_url("http://192.168.56.10:4567/dpa/#{params[:type]}")
+	# "<a href=\"#{authorize_url}\">#{authorize_url}</a>"
+	redirect to(authorize_url)
+
+end
+
+#handle callback
+get '/dpa/:type' do
+
+	#params[:uid], params[:oauth_token]
+	session.get_access_token
+	dpClient = DropboxClient.new(session, ACCESS_TYPE)
+	redirect to("/dp_#{params[:type]}")
+
+end
+
+#restore mileage db from dropbox
+get '/dp_restore' do
+
+	out = dpClient.get_file("/mileage.db")
+	open('mileage.db', 'w') {|f| f.puts out }
+
+	@status = "Restore"
+	erb :dropbox
+end
+
+#restore mileage db from dropbox
+get '/dp_backup' do
+
+	file = open('mileage.db')
+	response = dpClient.put_file('/mileage.db', file,true)
+	puts response.inspect
+
+	@status = "Backup"
+	erb :dropbox
 end
