@@ -13,8 +13,10 @@ APP_KEY = 'jbmgaznc7uukml7'
 APP_SECRET = 'oekmkvl3utz4occ'
 ACCESS_TYPE = :app_folder
 
-session = DropboxSession.new(APP_KEY, APP_SECRET)
-dpClient = nil
+saved_session = nil
+session  = nil
+
+
 
 get '/' do
 	@rows = db.execute( "SELECT * FROM trips ORDER BY id desc" )
@@ -89,6 +91,54 @@ end
 #init the dropbox api
 get '/dp/:type' do
 
+
+	if saved_session == nil
+		session = DropboxSession.new(APP_KEY,APP_SECRET)
+	else
+		session = DropboxSession.deserialize(saved_session)
+	end
+
+	
+
+	if params[:type] == "backup"
+		begin 
+			dpClient = DropboxClient.new(session, ACCESS_TYPE)
+
+			file = open('mileage.db')
+			response = dpClient.put_file('/mileage.db', file,true)
+			puts response.inspect
+
+			@status = "Backup"
+			erb :dropbox
+
+		rescue DropboxAuthError => e
+			redirect to(uri("/dprquest/#{params[:type]}"))
+		end
+	end
+
+
+	if params[:type] == "restore"
+		begin
+			dpClient = DropboxClient.new(session, ACCESS_TYPE)
+
+			out = dpClient.get_file("/mileage.db")
+			open('mileage.db', 'w') {|f| f.puts out }
+
+			@status = "Restore"
+			erb :dropbox
+
+		rescue DropboxAuthError => e
+			redirect to(uri("/dprquest/#{params[:type]}"))
+		end
+	end
+
+	
+
+
+end
+
+#make new oauth request
+get '/dprquest/:type' do
 	session.get_request_token
 	authorize_url = session.get_authorize_url(uri("/dpa/#{params[:type]}"))
 	# "<a href=\"#{authorize_url}\">#{authorize_url}</a>"
@@ -96,33 +146,13 @@ get '/dp/:type' do
 
 end
 
-#handle callback
+
+#handle oauth callback
 get '/dpa/:type' do
 
 	#params[:uid], params[:oauth_token]
 	session.get_access_token
-	dpClient = DropboxClient.new(session, ACCESS_TYPE)
-	redirect to(uri("/dp_#{params[:type]}"))
+	saved_session = session.serialize
+	redirect to(uri("/dp/#{params[:type]}"))
 
-end
-
-#restore mileage db from dropbox
-get '/dp_restore' do
-
-	out = dpClient.get_file("/mileage.db")
-	open('mileage.db', 'w') {|f| f.puts out }
-
-	@status = "Restore"
-	erb :dropbox
-end
-
-#restore mileage db from dropbox
-get '/dp_backup' do
-
-	file = open('mileage.db')
-	response = dpClient.put_file('/mileage.db', file,true)
-	puts response.inspect
-
-	@status = "Backup"
-	erb :dropbox
 end
