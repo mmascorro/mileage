@@ -109,7 +109,6 @@ get '/dp/:type' do
 			puts response.inspect
 
 			@status = "Backup"
-			erb :dropbox
 
 		rescue DropboxAuthError => e
 			redirect to(uri("/dprquest/#{params[:type]}"))
@@ -125,7 +124,6 @@ get '/dp/:type' do
 			open('mileage.db', 'w') {|f| f.puts out }
 
 			@status = "Restore"
-			erb :dropbox
 
 		rescue DropboxAuthError => e
 			redirect to(uri("/dprquest/#{params[:type]}"))
@@ -133,7 +131,7 @@ get '/dp/:type' do
 	end
 
 	
-
+	erb :dropbox
 
 end
 
