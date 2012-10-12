@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
-
+require 'yaml'
 require 'dropbox_sdk'
 
 
@@ -9,8 +9,10 @@ require 'dropbox_sdk'
 db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
 
-APP_KEY = 'jbmgaznc7uukml7'
-APP_SECRET = 'oekmkvl3utz4occ'
+settings = File.open( 'settings.yaml' ) { |f| YAML::load( f ) }
+
+APP_KEY = settings['app_key']
+APP_SECRET = settings['app_secret']
 ACCESS_TYPE = :app_folder
 
 saved_session = nil
