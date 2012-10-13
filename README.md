@@ -6,5 +6,5 @@ Simple app to track mileage of work trips. Sinatra, SQLite, Twitter Bootstrap. N
 instructions
 ------------
 
-1. run fill out settings.yaml with secret & key
-2. run /dp/restore
+1. Fill out settings.yaml with secret & key
+2. Run /dp/restore
