@@ -9,10 +9,6 @@ require 'dropbox_sdk'
 db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
 
-settings = File.open( 'settings.yaml' ) { |f| YAML::load( f ) }
-
-
-
 
 
 get '/' do
