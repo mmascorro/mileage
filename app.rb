@@ -7,11 +7,6 @@ require 'yaml'
 db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 7b791cf8538beab3b9556dc35a2bbf41e8d89155
-
 get '/' do
 	@rows = db.execute( "SELECT * FROM trips ORDER BY id desc" )
 	erb :index
@@ -75,8 +70,4 @@ get '/leg/:id' do
 	
 	erb :leg
 	
-<<<<<<< HEAD
 end
-=======
-end
->>>>>>> 7b791cf8538beab3b9556dc35a2bbf41e8d89155
