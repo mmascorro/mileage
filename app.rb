@@ -2,22 +2,10 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sqlite3'
 require 'yaml'
-require 'dropbox_sdk'
-
 
 
 db = SQLite3::Database.new( "mileage.db" )
 db.results_as_hash = true
-
-settings = File.open( 'settings.yaml' ) { |f| YAML::load( f ) }
-
-APP_KEY = settings['app_key']
-APP_SECRET = settings['app_secret']
-ACCESS_TYPE = :app_folder
-
-saved_session = nil
-session  = nil
-
 
 
 get '/' do
@@ -83,76 +71,4 @@ get '/leg/:id' do
 	
 	erb :leg
 	
-end
-
-get '/config' do
-	erb :config
-end
-
-
-#init the dropbox api
-get '/dp/:type' do
-
-
-	if saved_session == nil
-		session = DropboxSession.new(APP_KEY,APP_SECRET)
-	else
-		session = DropboxSession.deserialize(saved_session)
-	end
-
-	
-
-	if params[:type] == "backup"
-		begin 
-			dpClient = DropboxClient.new(session, ACCESS_TYPE)
-
-			file = open('mileage.db')
-			response = dpClient.put_file('/mileage.db', file,true)
-			puts response.inspect
-
-			@status = "Backup"
-
-		rescue DropboxAuthError => e
-			redirect to(uri("/dprquest/#{params[:type]}"))
-		end
-	end
-
-
-	if params[:type] == "restore"
-		begin
-			dpClient = DropboxClient.new(session, ACCESS_TYPE)
-
-			out = dpClient.get_file("/mileage.db")
-			open('mileage.db', 'w') {|f| f.puts out }
-
-			@status = "Restore"
-
-		rescue DropboxAuthError => e
-			redirect to(uri("/dprquest/#{params[:type]}"))
-		end
-	end
-
-	
-	erb :dropbox
-
-end
-
-#make new oauth request
-get '/dprquest/:type' do
-	session.get_request_token
-	authorize_url = session.get_authorize_url(uri("/dpa/#{params[:type]}"))
-	# "<a href=\"#{authorize_url}\">#{authorize_url}</a>"
-	redirect to(authorize_url)
-
-end
-
-
-#handle oauth callback
-get '/dpa/:type' do
-
-	#params[:uid], params[:oauth_token]
-	session.get_access_token
-	saved_session = session.serialize
-	redirect to(uri("/dp/#{params[:type]}"))
-
 end
