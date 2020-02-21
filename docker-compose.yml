@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+    app:
+        build: .
+        command: puma -C config/puma.rb
+        volumes:
+            - .:/app
+        ports:
+            - 9000:9000
